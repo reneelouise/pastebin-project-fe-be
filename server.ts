@@ -27,32 +27,34 @@ const app = express();
 app.use(express.json()); //add body parser to each following route handler
 app.use(cors()) //add CORS support to each following route handler
 
-const client = new Client(dbConfig);
-client.connect();
+// const client = new Client(dbConfig);
+// client.connect();
+
+pool.connect();
 
 // //post req
 // app.post("/", async (req, res) => {
 //   const dbres = await client.query('select * from pastes');
 //   try {
 //     console.log("Hello I am working!")
-    
+
 //   } catch (err) {
 //     console.error(err.message)
-    
+
 //   }
 
 //   // res.json(dbres.rows);
 // });
 
 app.get("/", async (req, res) => {
-  
+
   try {
-    const dbres = await pool.query('SELECT * FROM pastes');
+    const dbres = await pool.query('SELECT * FROM rbgdatabase');
     res.json(dbres.rows);
-    
+
   } catch (err) {
     console.error(err.message)
-    
+
   }
 
 
