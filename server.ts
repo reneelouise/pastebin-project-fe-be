@@ -1,12 +1,12 @@
 import { Client } from "pg";
-// import { config } from "dotenv";
+import { config } from "dotenv";
 import express from "express";
 import cors from "cors";
 
-const pool = require("./db");
+// const pool = require("./db");
 
 
-// config(); //Read .env file lines as though they were env vars.
+config(); //Read .env file lines as though they were env vars.
 
 //Call this script with the environment variable LOCAL set if you want to connect to a local db (i.e. without SSL)
 //Do not set the environment variable LOCAL if you want to connect to a heroku DB.
@@ -14,7 +14,6 @@ const pool = require("./db");
 //For the ssl property of the DB connection config, use a value of...
 // false - when connecting to a local DB
 // { rejectUnauthorized: false } - when connecting to a heroku DB
-const PORT = 4000;
 const herokuSSLSetting = { rejectUnauthorized: false }
 const sslSetting = process.env.LOCAL ? false : herokuSSLSetting
 const dbConfig = {
@@ -45,22 +44,24 @@ client.connect();
 // });
 
 app.get("/", async (req, res) => {
+  const dbres = await client.query('SELECT * FROM pastes');
+  res.json(dbres.rows);
   
-  try {
-    const dbres = await pool.query('SELECT * FROM pastes');
-    res.json(dbres.rows);
+  // try {
+  //   const dbres = await pool.query('SELECT * FROM pastes');
+  //   res.json(dbres.rows);
     
-  } catch (err) {
-    console.error(err.message)
+  // } catch (err) {
+  //   console.error(err.message)
     
-  }
+  // }
 
 
 });
 
 
 //Start the server on the given port
-const port = PORT
+const port = process.env.PORT;
 if (!port) {
   throw 'Missing PORT environment variable.  Set it in .env file.';
 }
